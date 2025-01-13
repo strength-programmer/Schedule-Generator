@@ -1,6 +1,7 @@
 # Schedule Generator
 
-A web application for creating, managing, and exporting weekly schedules. Built with Next.js, TypeScript, and Python.
+A web application for creating, managing, and exporting weekly schedules. It is a super helpful tool to all who plan to make their schedules more organized, convenient, and easy to be seen, ensuring an accomplished itinerary.
+Built with Next.js, TypeScript, and Python.
 
 ## Features
 
