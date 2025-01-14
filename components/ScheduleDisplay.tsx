@@ -47,6 +47,11 @@ export function ScheduleDisplay({
                   <div>
                     {activity.startTime} - {activity.endTime}
                   </div>
+                  {activity.venue && (
+                    <div className="text-xs mt-1">
+                      📍 {activity.venue}
+                    </div>
+                  )}
                   <div className="mt-1 flex justify-between">
                     <Button
                       size="sm"

@@ -15,16 +15,25 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
   const [endTime, setEndTime] = useState('')
   const [selectedDays, setSelectedDays] = useState<string[]>([])
   const [category, setCategory] = useState('Other')
+  const [venue, setVenue] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (name && startTime && endTime && selectedDays.length > 0) {
-      onAddActivity({ name, startTime, endTime, days: selectedDays, category })
+      onAddActivity({ 
+        name, 
+        startTime, 
+        endTime, 
+        days: selectedDays, 
+        category,
+        venue
+      })
       setName('')
       setStartTime('')
       setEndTime('')
       setSelectedDays([])
       setCategory('Other')
+      setVenue('')
     }
   }
 
@@ -76,6 +85,15 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
             ))}
           </SelectContent>
         </Select>
+      </div>
+      <div>
+        <Label htmlFor="venue">Venue</Label>
+        <Input
+          id="venue"
+          value={venue}
+          onChange={(e) => setVenue(e.target.value)}
+          placeholder="Enter location (optional)"
+        />
       </div>
       <div>
         <Label>Days of the Week</Label>

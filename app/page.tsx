@@ -38,8 +38,11 @@ export default function HomePage() {
       doc.text(schedule.title, 10, 10);
       
       schedule.activities.forEach((activity, index) => {
-        doc.text(`${activity.name} (${activity.category})`, 10, 20 + index * 10);
-        doc.text(`${activity.startTime} - ${activity.endTime}`, 10, 25 + index * 10);
+        doc.text(`${activity.name} (${activity.category})`, 10, 20 + index * 15);
+        doc.text(`${activity.startTime} - ${activity.endTime}`, 10, 25 + index * 15);
+        if (activity.venue) {
+          doc.text(`Location: ${activity.venue}`, 10, 30 + index * 15);
+        }
       });
 
       doc.save(`${schedule.title}-schedule.pdf`);

@@ -5,6 +5,7 @@ export interface Activity {
     endTime: string
     days: string[]
     category: string
+    venue: string
   }
   
   export interface Schedule {
