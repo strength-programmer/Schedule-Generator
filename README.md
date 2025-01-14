@@ -22,8 +22,8 @@ Built with Next.js, TypeScript, and Python.
   - Radix UI Components
 
 - **Backend:**
-  - Python (PDF Generation)
-  - FPDF Library
+  - Remove Python (PDF Generation)
+  - Remove FPDF Library
 
 ## Prerequisites
 

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Schedule } from '@/types'
 import { useRouter } from 'next/navigation'
+import { jsPDF } from "jspdf";
 
 export default function HomePage() {
   const [schedules, setSchedules] = useState<Schedule[]>([])
@@ -33,49 +34,20 @@ export default function HomePage() {
 
   const downloadPDF = async (schedule: Schedule) => {
     try {
-      // Show loading state
-      const button = document.querySelector(`button[data-schedule-id="${schedule.id}"]`)
-      if (button) button.textContent = 'Generating...'
+      const doc = new jsPDF();
+      doc.text(schedule.title, 10, 10);
+      
+      schedule.activities.forEach((activity, index) => {
+        doc.text(`${activity.name} (${activity.category})`, 10, 20 + index * 10);
+        doc.text(`${activity.startTime} - ${activity.endTime}`, 10, 25 + index * 10);
+      });
 
-      const scheduleData = encodeURIComponent(JSON.stringify(schedule))
-      const response = await fetch(`/api/pdf/${schedule.id}?scheduleData=${scheduleData}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/pdf',
-        },
-      })
-      
-      if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`Failed to generate PDF: ${errorText}`)
-      }
-
-      // Create a blob from the PDF stream
-      const blob = await response.blob()
-      if (blob.size === 0) {
-        throw new Error('Generated PDF is empty')
-      }
-      
-      // Create a link element and trigger download
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${schedule.title}-schedule.pdf`
-      
-      // Append to document, click, and cleanup
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
+      doc.save(`${schedule.title}-schedule.pdf`);
     } catch (error: any) {
-      console.error('Error downloading PDF:', error)
-      alert(`Failed to download PDF: ${error.message}`)
-    } finally {
-      // Reset button text
-      const button = document.querySelector(`button[data-schedule-id="${schedule.id}"]`)
-      if (button) button.textContent = 'Download PDF'
+      console.error('Error downloading PDF:', error);
+      alert(`Failed to download PDF: ${error.message}`);
     }
-  }
+  };
 
   if (loading) {
     return (
