@@ -34,3 +34,34 @@ Built with Next.js, TypeScript, and Python.
 ## Installation
 
 1. Clone the repository:
+```bash
+git clone https://github.com/strength-programmer/Schedule-Generator.git 
+```
+2. Install Node.js dependencies by running `npm install`
+3. Install Node.js dependencies by running `pip install -r requirements.txt`
+
+## Running the Application
+
+1. Development mode:
+```bash
+npm run dev 
+```
+2. Production build:
+```bash
+npm run build
+npm start 
+```
+The application will be available at `http://localhost:3000`
+
+## Project Structure
+```
+Schedule-Generator/
+├── app/                   # Next.js app directory
+│   ├── api/              # API routes
+│   ├── schedule/         # Schedule pages
+│   └── page.tsx          # Home page
+├── components/           # React components
+├── public/              # Static files
+├── scripts/             # Utility scripts
+└── types.ts            # TypeScript types
+```
