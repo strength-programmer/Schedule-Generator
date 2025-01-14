@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { spawn } from 'child_process'
 import path from 'path'
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<Response> {
   try {
     const url = new URL(request.url)
     const scheduleData = url.searchParams.get('scheduleData')
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     const chunks: Buffer[] = []
     const errorChunks: Buffer[] = []
 
-    return new Promise((resolve) => {
+    return new Promise<Response>((resolve) => {
       pythonProcess.stdout.on('data', (data) => chunks.push(Buffer.from(data)))
       pythonProcess.stderr.on('data', (data) => {
         console.log('Python stderr:', data.toString())
@@ -51,4 +51,4 @@ export async function GET(request: Request) {
     console.error('Error:', error)
     return new NextResponse('Internal server error', { status: 500 })
   }
-} 
+}
