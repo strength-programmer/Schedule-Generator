@@ -2,6 +2,7 @@
   "scripts": {
     "predev": "node scripts/check-python.js",
     "dev": "next dev",
+    "prebuild": "pip install fpdf",
     "build": "node scripts/check-python.js && next build",
     "start": "next start",
     "lint": "next lint"
