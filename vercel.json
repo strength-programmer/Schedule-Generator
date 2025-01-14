@@ -1,10 +1,5 @@
 {
     "buildCommand": "npm run build",
     "installCommand": "npm install",
-    "framework": "nextjs",
-    "build": {
-      "env": {
-        "PYTHON_VERSION": "3.9"
-      }
-    }
+    "framework": "nextjs"
   }
