@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,13 +9,37 @@ import { Activity } from '../types'
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const categories = ['Work', 'Study', 'Personal', 'Health', 'Social', 'Other']
 
-export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit<Activity, 'id'>) => void }) {
+export function ScheduleForm({ 
+  onAddActivity, 
+  initialActivity = null
+}: { 
+  onAddActivity: (activity: Omit<Activity, 'id'>) => void
+  initialActivity?: Activity | null
+}) {
   const [name, setName] = useState('')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [selectedDays, setSelectedDays] = useState<string[]>([])
-  const [category, setCategory] = useState('Other')
+  const [category, setCategory] = useState(initialActivity?.category || 'Other')
   const [venue, setVenue] = useState('')
+
+  useEffect(() => {
+    if (initialActivity) {
+      setName(initialActivity.name)
+      setStartTime(initialActivity.startTime)
+      setEndTime(initialActivity.endTime)
+      setSelectedDays(initialActivity.days)
+      setCategory(initialActivity.category)
+      setVenue(initialActivity.venue || '')
+    } else {
+      setName('')
+      setStartTime('')
+      setEndTime('')
+      setSelectedDays([])
+      setCategory('Other')
+      setVenue('')
+    }
+  }, [initialActivity])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,12 +52,14 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
         category,
         venue
       })
-      setName('')
-      setStartTime('')
-      setEndTime('')
-      setSelectedDays([])
-      setCategory('Other')
-      setVenue('')
+      if (!initialActivity) {
+        setName('')
+        setStartTime('')
+        setEndTime('')
+        setSelectedDays([])
+        setCategory('Other')
+        setVenue('')
+      }
     }
   }
 
@@ -43,7 +69,7 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
         <Label htmlFor="name">Activity Name</Label>
         <Input
           id="name"
-          value={name}
+          value={name || ''}
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter activity name"
           required
@@ -55,7 +81,7 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
           <Input
             id="startTime"
             type="time"
-            value={startTime}
+            value={startTime || ''}
             onChange={(e) => setStartTime(e.target.value)}
             required
           />
@@ -65,7 +91,7 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
           <Input
             id="endTime"
             type="time"
-            value={endTime}
+            value={endTime || ''}
             onChange={(e) => setEndTime(e.target.value)}
             required
           />
@@ -73,9 +99,12 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
       </div>
       <div>
         <Label htmlFor="category">Category</Label>
-        <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a category" />
+        <Select 
+          value={category} 
+          onValueChange={setCategory}
+        >
+          <SelectTrigger id="category">
+            <SelectValue>{category}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {categories.map((cat) => (
@@ -90,7 +119,7 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
         <Label htmlFor="venue">Venue</Label>
         <Input
           id="venue"
-          value={venue}
+          value={venue || ''}
           onChange={(e) => setVenue(e.target.value)}
           placeholder="Enter location (optional)"
         />
@@ -116,7 +145,9 @@ export function ScheduleForm({ onAddActivity }: { onAddActivity: (activity: Omit
           ))}
         </div>
       </div>
-      <Button type="submit">Add Activity</Button>
+      <Button type="submit">
+        {initialActivity ? 'Update Activity' : 'Add Activity'}
+      </Button>
     </form>
   )
 }

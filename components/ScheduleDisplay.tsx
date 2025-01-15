@@ -73,13 +73,16 @@ export function ScheduleDisplay({
           </CardContent>
         </Card>
       ))}
-      <Dialog open={!!editingActivity} onOpenChange={() => setEditingActivity(null)}>
+      <Dialog open={!!editingActivity} onOpenChange={(open) => {
+        if (!open) setEditingActivity(null)
+      }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Activity</DialogTitle>
           </DialogHeader>
           {editingActivity && (
             <ScheduleForm
+              initialActivity={editingActivity}
               onAddActivity={(updatedActivity) => {
                 onEditActivity({ ...updatedActivity, id: editingActivity.id })
                 setEditingActivity(null)

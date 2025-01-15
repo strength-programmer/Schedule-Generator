@@ -35,13 +35,63 @@ export default function HomePage() {
   const downloadPDF = async (schedule: Schedule) => {
     try {
       const doc = new jsPDF();
-      doc.text(schedule.title, 10, 10);
+      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const pageHeight = doc.internal.pageSize.height;
+      const margin = 20;
       
-      schedule.activities.forEach((activity, index) => {
-        doc.text(`${activity.name} (${activity.category})`, 10, 20 + index * 15);
-        doc.text(`${activity.startTime} - ${activity.endTime}`, 10, 25 + index * 15);
-        if (activity.venue) {
-          doc.text(`Location: ${activity.venue}`, 10, 30 + index * 15);
+      // Set title
+      doc.setFontSize(20);
+      doc.text(schedule.title, 10, margin);
+      
+      let yPosition = margin + 20; // Start after title
+      
+      // Iterate through each day
+      daysOfWeek.forEach((day) => {
+        const dayActivities = schedule.activities.filter((activity) => 
+          activity.days.includes(day)
+        );
+        
+        if (dayActivities.length > 0) {
+          // Check if we need a new page for the day section
+          if (yPosition > pageHeight - 50) {
+            doc.addPage();
+            yPosition = margin;
+          }
+
+          // Add day header
+          doc.setFontSize(16);
+          doc.text(day, 10, yPosition);
+          yPosition += 10;
+          
+          // Sort activities by start time
+          const sortedActivities = dayActivities.sort((a, b) => 
+            a.startTime.localeCompare(b.startTime)
+          );
+          
+          // Add activities for this day
+          doc.setFontSize(12);
+          sortedActivities.forEach((activity) => {
+            // Calculate required height for this activity
+            const activityHeight = activity.venue ? 21 : 14; // Base height + venue if present
+
+            // Check if we need a new page for this activity
+            if (yPosition + activityHeight > pageHeight - margin) {
+              doc.addPage();
+              yPosition = margin;
+            }
+
+            doc.text(`• ${activity.name} (${activity.category})`, 15, yPosition);
+            yPosition += 7;
+            doc.text(`  ${activity.startTime} - ${activity.endTime}`, 15, yPosition);
+            yPosition += 7;
+            if (activity.venue) {
+              doc.text(`  Venue: ${activity.venue}`, 15, yPosition);
+              yPosition += 7;
+            }
+            yPosition += 3; // Space between activities
+          });
+          
+          yPosition += 10; // Space between days
         }
       });
 
