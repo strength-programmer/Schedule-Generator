@@ -32,6 +32,14 @@ export default function HomePage() {
     localStorage.setItem('schedules', JSON.stringify(updatedSchedules))
   }
 
+  const formatTime = (time24h: string): string => {
+    const [hours, minutes] = time24h.split(':');
+    const hour = parseInt(hours, 10);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${period}`;
+  }
+
   const downloadPDF = async (schedule: Schedule) => {
     try {
       const doc = new jsPDF();
@@ -82,7 +90,7 @@ export default function HomePage() {
 
             doc.text(`• ${activity.name} (${activity.category})`, 15, yPosition);
             yPosition += 7;
-            doc.text(`  ${activity.startTime} - ${activity.endTime}`, 15, yPosition);
+            doc.text(`  ${formatTime(activity.startTime)} - ${formatTime(activity.endTime)}`, 15, yPosition);
             yPosition += 7;
             if (activity.venue) {
               doc.text(`  Venue: ${activity.venue}`, 15, yPosition);

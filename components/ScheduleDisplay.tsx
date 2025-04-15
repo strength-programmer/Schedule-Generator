@@ -16,6 +16,15 @@ const categoryColors: { [key: string]: string } = {
   Other: 'bg-gray-500',
 }
 
+// Add this function to convert 24h time to AM/PM format
+const formatTime = (time24h: string): string => {
+  const [hours, minutes] = time24h.split(':');
+  const hour = parseInt(hours, 10);
+  const period = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12; // Convert to 12-hour format (0 becomes 12)
+  return `${hour12}:${minutes} ${period}`;
+}
+
 export function ScheduleDisplay({
   activities,
   onEditActivity,
@@ -45,7 +54,7 @@ export function ScheduleDisplay({
                 >
                   <div className="font-semibold">{activity.name}</div>
                   <div>
-                    {activity.startTime} - {activity.endTime}
+                    {formatTime(activity.startTime)} - {formatTime(activity.endTime)}
                   </div>
                   {activity.venue && (
                     <div className="text-xs mt-1">
